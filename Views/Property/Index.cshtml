@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Property Overview";
+}
+@model List<RenterModel>
+
+<div class="text-center">
+    <h1 class="display-4">Overview</h1>
+    <br />
+    <table class="table">
+        <thead>
+            <tr> 
+                <th>
+                    Id
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var each in Model)
+                {
+                    <tr>
+                        <td>
+                            @each.Id
+                        </td>
+                        <td>
+                            @each.Name
+                        </td>
+                        <td>
+                            <a asp-action="EditRenter" asp-route-id="@each.Id">Edit</a>
+                            <a asp-action="DeleteRenter" asp-route-id="@each.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
