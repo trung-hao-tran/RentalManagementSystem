@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Edit renter: " + Model.Name;
+}
+@model RenterModel
+<div class="container mt-4">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2>Edit renter: @Model.Name</h2>
+            </div>
+            <div class="card-body">
+                <form asp-action="EditRenter" method="post">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <label asp-for="Name" class="form-label">Name</label>
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <input asp-for="Name" class="form-control" placeholder="Enter renter's' Id" value="@Model.Name"/>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-primary" type="submit">Change</button>
+                        <a asp-controller="Property" asp-action="Index" class="btn btn-danger">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial.cshtml" />
+}
