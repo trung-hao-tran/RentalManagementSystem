@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RentalManagementSystem.Data;
 using RentalManagementSystem.Models;
 
@@ -13,15 +14,17 @@ namespace RentalManagementSystem.Controllers
             _db = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int propertyId)
         {
-            var allRenters = _db.Renters.ToList();
-            return View(allRenters);
+            var property = await _db.Properties.Include(p => p.Renters).FirstOrDefaultAsync(p => p.Id == propertyId);
+
+            return View(property);
         }
 
         [HttpGet]
-        public IActionResult AddRenter()
+        public IActionResult AddRenter(int propertyId)
         {
+            ViewBag.PropertyId = propertyId;
             return View();
         }
 
@@ -35,7 +38,7 @@ namespace RentalManagementSystem.Controllers
             if (ModelState.IsValid) { 
                 _db.Renters.Add(model);
                 _db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { propertyId = model.PropertyId});
 
             }
 
@@ -66,7 +69,7 @@ namespace RentalManagementSystem.Controllers
             {
                 _db.Renters.Update(model);
                 _db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { propertyId = model.PropertyId });
 
             }
 

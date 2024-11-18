@@ -1,13 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Property Overview";
 }
-@model List<RenterModel>
+@model PropertyModel
 
 <div class="text-center">
     <h1 class="display-4">Overview</h1>
     <br />
 
-    <a asp-action="AddRenter" class="btn btn-primary ">Add new renter</a>
+    <a asp-action="AddRenter" asp-route-propertyId="@Model.Id" class="btn btn-primary" >Add new renter</a>
 
     <br />
 
@@ -27,18 +27,18 @@
         </thead>
         <tbody>
             @{
-                foreach (var each in Model)
+                foreach (var renter in Model.Renters)
                 {
                     <tr>
                         <td>
-                            @each.Id
+                            @renter.Id
                         </td>
                         <td>
-                            @each.Name
+                            @renter.Name
                         </td>
                         <td>
-                            <a class="btn btn-primary" asp-action="EditRenter" asp-route-id="@each.Id">Edit</a>
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="@each.Id" data-name="@each.Name">Delete</button>
+                            <a class="btn btn-primary" asp-action="EditRenter" asp-route-id="@renter.Id">Edit</a>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="@renter.Id" data-name="@renter.Name">Delete</button>
                         </td>
                     </tr>
                 }

@@ -6,8 +6,9 @@ namespace RentalManagementSystem.Models
     {
 
         public int Id { get; set; }
-        public required decimal Price { get; set; }
-        public required string Number { get; set; }
-        public List<RenterModel> Renters { get; set; } = [];
+        public required float Price { get; set; }
+        public required int UnitNumber { get; set; }
+        public required char BlockNumber { get; set; }
+        public List<RenterModel> Renters { get; set; }
     }
 }

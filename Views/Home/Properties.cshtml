@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Properties";
+}
+@model List<PropertyModel>
+
+<div class="text-center">
+    <h1 class="display-4">Overview</h1>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Unit
+                </th>
+                <th>
+                    Price
+                </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var each in Model)
+                {
+                    <tr>
+                        <td>
+                            @each.Id
+                        </td>
+                        <td>
+                            @each.BlockNumber@each.UnitNumber
+                        </td>
+                        <td>
+                            @each.Price
+                        </td>
+                        <td>
+                            <a class="btn btn-primary" asp-action="Index" asp-controller="Property" asp-route-propertyId="@each.Id">Details</a>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="@each.Id" data-name="@each.BlockNumber + @each.UnitNumber">Delete</button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

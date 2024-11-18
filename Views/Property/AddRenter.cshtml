@@ -11,6 +11,7 @@
             </div>
             <div class="card-body">
                 <form asp-action="AddRenter" method="post">
+                    <input type="hidden" asp-for="PropertyId" value="@ViewBag.PropertyId" />
                     <div class="mb-3">
                          <div class="d-flex justify-content-between">
                             <label asp-for="Name" class="form-label">Name</label>
@@ -20,7 +21,7 @@
                     </div>
                     <div class="d-flex justify-content-between">
                         <button class="btn btn-primary" type="submit">Create</button>
-                        <a asp-controller="Property" asp-action="Index" class="btn btn-danger" >Cancel</a>
+                        <a asp-controller="Property" asp-action="Index" asp-route-propertyId="@ViewBag.PropertyId" class="btn btn-danger" >Cancel</a>
                     </div>
                 </form>
             </div>

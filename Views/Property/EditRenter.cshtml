@@ -10,6 +10,7 @@
             </div>
             <div class="card-body">
                 <form asp-action="EditRenter" method="post">
+                    <input asp-for="PropertyId" type="hidden" value="@Model.PropertyId" />
                     <div class="mb-3">
                         <div class="d-flex justify-content-between">
                             <label asp-for="Name" class="form-label">Name</label>
