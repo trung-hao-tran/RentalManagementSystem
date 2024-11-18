@@ -6,6 +6,11 @@
 <div class="text-center">
     <h1 class="display-4">Overview</h1>
     <br />
+
+    <a asp-action="AddRenter" class="btn btn-primary ">Add new renter</a>
+
+    <br />
+
     <table class="table">
         <thead>
             <tr> 
@@ -32,8 +37,8 @@
                             @each.Name
                         </td>
                         <td>
-                            <a asp-action="EditRenter" asp-route-id="@each.Id">Edit</a>
-                            <a asp-action="DeleteRenter" asp-route-id="@each.Id">Delete</a>
+                            <a class="btn btn-primary" asp-action="EditRenter" asp-route-id="@each.Id">Edit</a>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="@each.Id" data-name="@each.Name">Delete</button>
                         </td>
                     </tr>
                 }
@@ -41,3 +46,45 @@
         </tbody>
     </table>
 </div>
+
+
+<!-- Modal HTML and script -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete this renter?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure to delete this renter: <br />
+                <strong>ID:</strong> <span id="modal-id"></span>
+                <br />
+                <strong> Name:</strong> <span id="modal-name"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a id="modalActionLink" type="button" class="btn btn-danger" asp-action="DeleteRenter" >Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const deleteModal = document.getElementById('deleteModal');
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        // Button that triggered the modal
+        const button = event.relatedTarget;
+
+        // Extract info from data-id attribute
+        const id = button.getAttribute('data-id');
+        const name = button.getAttribute('data-name');
+        // Update the modal's content
+        const modalIdElement = deleteModal.querySelector('#modal-id');
+        const modalNameElement = deleteModal.querySelector('#modal-name');
+        modalIdElement.textContent = id;
+        modalNameElement.textContent = name;
+        // Update the action link dynamically
+        const actionLink = document.getElementById('modalActionLink');
+        actionLink.href = actionLink.href + `/${id}`;   // For direct links
+    });
+</script>
