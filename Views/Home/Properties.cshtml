@@ -39,7 +39,7 @@
                             @each.Price
                         </td>
                         <td>
-                            <a class="btn btn-primary" asp-action="Index" asp-controller="Property" asp-route-propertyId="@each.Id">Details</a>
+                            <a class="btn btn-primary" asp-action="Overview" asp-controller="Property" asp-route-propertyId="@each.Id">Details</a>
                             <button type="button" class="btn btn-danger" data-toggle="modal" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="@each.Id" data-name="@each.BlockNumber + @each.UnitNumber">Delete</button>
                         </td>
                     </tr>

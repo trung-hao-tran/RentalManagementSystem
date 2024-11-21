@@ -11,8 +11,8 @@ using RentalManagementSystem.Data;
 namespace RentalManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241118054747_NewDbCreation")]
-    partial class NewDbCreation
+    [Migration("20241119063730_InitDB")]
+    partial class InitDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,7 +42,12 @@ namespace RentalManagementSystem.Migrations
                     b.Property<int>("UnitNumber")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UtilityProfileId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UtilityProfileId");
 
                     b.ToTable("Properties");
 
@@ -105,6 +110,57 @@ namespace RentalManagementSystem.Migrations
                         });
                 });
 
+            modelBuilder.Entity("RentalManagementSystem.Models.UtilityModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Price")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("UtilityProfileId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UtilityProfileId");
+
+                    b.ToTable("UtilityModel");
+                });
+
+            modelBuilder.Entity("RentalManagementSystem.Models.UtilityProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UtilityProfile");
+                });
+
+            modelBuilder.Entity("RentalManagementSystem.Models.PropertyModel", b =>
+                {
+                    b.HasOne("RentalManagementSystem.Models.UtilityProfile", "UtilityProfile")
+                        .WithMany("Properties")
+                        .HasForeignKey("UtilityProfileId");
+
+                    b.Navigation("UtilityProfile");
+                });
+
             modelBuilder.Entity("RentalManagementSystem.Models.RenterModel", b =>
                 {
                     b.HasOne("RentalManagementSystem.Models.PropertyModel", "Property")
@@ -116,9 +172,27 @@ namespace RentalManagementSystem.Migrations
                     b.Navigation("Property");
                 });
 
+            modelBuilder.Entity("RentalManagementSystem.Models.UtilityModel", b =>
+                {
+                    b.HasOne("RentalManagementSystem.Models.UtilityProfile", "UtilityProfile")
+                        .WithMany("Utilities")
+                        .HasForeignKey("UtilityProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UtilityProfile");
+                });
+
             modelBuilder.Entity("RentalManagementSystem.Models.PropertyModel", b =>
                 {
                     b.Navigation("Renters");
+                });
+
+            modelBuilder.Entity("RentalManagementSystem.Models.UtilityProfile", b =>
+                {
+                    b.Navigation("Properties");
+
+                    b.Navigation("Utilities");
                 });
 #pragma warning restore 612, 618
         }

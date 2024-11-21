@@ -10,5 +10,8 @@ namespace RentalManagementSystem.Models
         public required int UnitNumber { get; set; }
         public required char BlockNumber { get; set; }
         public List<RenterModel> Renters { get; set; }
+        public int? UtilityProfileId { get; set; }
+        public UtilityProfile? UtilityProfile { get; set; }
+
     }
 }

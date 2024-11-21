@@ -1,0 +1,165 @@
+﻿@model IEnumerable<RentalManagementSystem.Models.UtilityProfile>
+
+@{
+    ViewData["Title"] = "Utility Profiles";
+}
+
+<div class="text-center mb-4">
+    <h1 class="display-4">Utility Profiles</h1>
+    <div class="mt-3">
+        <a href="@Url.Action("Create", "UtilityProfile")" class="btn btn-success">
+            Add New Profile
+        </a>
+    </div>
+</div>
+
+<div class="mb-4">
+    <div class="row align-items-center">
+        <!-- Utility Type Filter -->
+        <div class="col-md-2">
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="utilityDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span id="selectedUtilitiesText">Select Utility Types</span>
+                </button>
+                <ul class="dropdown-menu w-100" aria-labelledby="utilityDropdown">
+                    <li class="p-lg-2">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="selectAllUtilities" onchange="toggleSelectAll(this)" />
+                            <label class="form-check-label" for="selectAllUtilities">Select All</label>
+                        </div>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    @foreach (var utilityType in Model.SelectMany(m => m.Utilities).Select(u => u.Name).Distinct())
+                    {
+                        <li class="p-lg-2">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input utility-checkbox" value="@utilityType" onchange="updateSelectedUtilities()" />
+                                <label class="form-check-label">@utilityType</label>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <!-- Search Bar -->
+        <div class="col-md-10">
+            <div class="input-group">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search by Name" onkeyup="filterProfiles()" />
+                <span class="input-group-text">
+                    <i class="material-icons">search</i>
+                </span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<div class="accordion" id="utilityProfilesAccordion">
+    @foreach (var profile in Model)
+    {
+        var totalUtilityPrice = profile.Utilities.Sum(u => (decimal)u.Price);
+
+        <div class="card mb-3 border-primary profile-card" data-name="@profile.Name" data-price="@totalUtilityPrice" data-utilities="@string.Join(',', profile.Utilities.Select(u => u.Name))">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center" id="heading-@profile.Id" data-bs-toggle="collapse" data-bs-target="#collapse-@profile.Id" aria-expanded="false" aria-controls="collapse-@profile.Id" style="cursor: pointer;">
+                <div>
+                    <span class="fw-bold">@profile.Name</span>
+                    <span class="badge rounded-pill bg-light text-dark ms-2">@profile.Utilities.Count Utilities</span>
+                    <span class="badge rounded-pill bg-light text-dark ms-2">@profile.Properties.Count Properties</span>
+                </div>
+                <span class="text-white"><strong> $@totalUtilityPrice Per Month</strong></span>
+            </div>
+
+            <div id="collapse-@profile.Id" class="collapse" aria-labelledby="heading-@profile.Id">
+                <div class="card-body">
+                    <h5 class="text-primary">Utilities:</h5>
+                    <ul class="list-group mb-3">
+                        @foreach (var utility in profile.Utilities)
+                        {
+                            <li class="list-group-item">
+                                <strong>@utility.Name</strong> - $@utility.Price
+                            </li>
+                        }
+                    </ul>
+
+                    <h5 class="text-primary">Properties:</h5>
+                    <ul class="list-group">
+                        @foreach (var property in profile.Properties)
+                        {
+                            <li class="list-group-item">
+                                @property.BlockNumber@property.UnitNumber
+                            </li>
+                        }
+                    </ul>
+
+                    <div class="d-flex justify-content-end mt-3">
+                        <a class="btn btn-warning me-2">Edit</a>
+                        <a class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    function filterProfiles() {
+        const searchInput = document.getElementById("searchInput").value.toLowerCase();
+
+        // Get selected utility types
+        const selectedUtilities = Array.from(document.querySelectorAll(".utility-checkbox:checked"))
+            .map(checkbox => checkbox.value.toLowerCase());
+
+        const profileCards = document.querySelectorAll(".profile-card");
+
+        profileCards.forEach(card => {
+            const name = card.dataset.name.toLowerCase();
+            const utilities = card.dataset.utilities.split(",").map(u => u.toLowerCase());
+
+            // Filter by name
+            const matchesName = name.includes(searchInput);
+
+            // Filter by utility types
+            const matchesUtilities = selectedUtilities.length > 0 &&
+                selectedUtilities.some(util => utilities.includes(util));
+
+            // Show or hide card based on both filters
+            if (matchesName && matchesUtilities) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    }
+</script>
+<script>
+    function updateSelectedUtilities() {
+        const checkboxes = document.querySelectorAll(".utility-checkbox");
+        const selected = Array.from(checkboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+
+        // Update displayed text in the dropdown button
+        const selectedText = selected.length ? selected.join(", ") : "Select Utility Types";
+        document.getElementById("selectedUtilitiesText").textContent = selectedText;
+
+        // Update "Select All" checkbox
+        const selectAll = document.getElementById("selectAllUtilities");
+        selectAll.checked = checkboxes.length > 0 && selected.length === checkboxes.length;
+
+        // Apply dynamic filtering (if needed)
+        filterProfiles();
+    }
+
+    function toggleSelectAll(selectAllCheckbox) {
+        const checkboxes = document.querySelectorAll(".utility-checkbox");
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+
+        updateSelectedUtilities();
+    }
+</script>
+

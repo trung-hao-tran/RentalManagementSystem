@@ -14,7 +14,7 @@ namespace RentalManagementSystem.Controllers
             _db = context;
         }
 
-        public async Task<IActionResult> Index(int propertyId)
+        public async Task<IActionResult> Overview(int propertyId)
         {
             var property = await _db.Properties.Include(p => p.Renters).FirstOrDefaultAsync(p => p.Id == propertyId);
 

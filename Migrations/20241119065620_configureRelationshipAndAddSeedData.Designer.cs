@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentalManagementSystem.Data;
 
@@ -10,9 +11,11 @@ using RentalManagementSystem.Data;
 namespace RentalManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241119065620_configureRelationshipAndAddSeedData")]
+    partial class configureRelationshipAndAddSeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,7 +141,7 @@ namespace RentalManagementSystem.Migrations
 
                     b.HasIndex("UtilityProfileId");
 
-                    b.ToTable("Utilities");
+                    b.ToTable("UtilityModel");
 
                     b.HasData(
                         new
